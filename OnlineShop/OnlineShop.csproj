@@ -44,10 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BevasarloKosar.cs" />
+    <Compile Include="BinarySearchTree.cs" />
+    <Compile Include="Felhasznalo.cs" />
     <Compile Include="FutoCipo.cs" />
     <Compile Include="IComparable.cs" />
     <Compile Include="IMegrendelheto.cs" />
-    <Compile Include="KosarMez.cs" />
+    <Compile Include="MegrendelhetoTarolo.cs" />
+    <Compile Include="Mez.cs" />
     <Compile Include="Masszazs.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

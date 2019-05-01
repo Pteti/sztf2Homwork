@@ -6,23 +6,49 @@ using System.Threading.Tasks;
 
 namespace OnlineShop
 {
-    class Szolgaltatas : IMegrendelheto
+    public delegate void SzolgaltatasRendelesNaplozo(Szolgaltatas szolgaltatas);
+    public class Szolgaltatas : IMegrendelheto, IComparable
     {
         string megnevezes;
-        int ar;
+        double ar;
         int prioritas;
+        public SzolgaltatasRendelesNaplozo Naplozo { get; set; }
         public string Megnevezes { get => megnevezes; set => megnevezes = value; }
-        public int Ar { get => ar; set => ar = value; }
+        public double Ar { get => ar; set => ar = value; }
         public int Prioritas { get => prioritas; set => prioritas = value; }
 
-        public int arAlkudozas()
+        public Szolgaltatas(string megnevezes, double ar, int prioritas)
         {
-            throw new NotImplementedException();
+            this.megnevezes = megnevezes;
+            this.ar = ar;
+            this.prioritas = prioritas;
+            MegrendelhetoTarolo.fabaIllesztes(this);
         }
-
         public int szallitasiIdoKiszamitasa(int tavolsag)
         {
-            throw new NotImplementedException();
+            switch (tavolsag)
+            {
+                case var expression when tavolsag < 10:
+                    return 1;
+                default:
+                    return 2;
+            }
+        }
+
+        public void arAlkudozas()
+        {
+            Random rnd = new Random();
+            if (rnd.Next(0, 100) % prioritas == 0)
+            {
+                Console.WriteLine("Najó, kapsz 10% -ot!");
+                ar = ar * 0.9;
+            }
+        }
+
+        public void kosarba(string uzenet)
+        {
+            Console.WriteLine(uzenet);
+            Naplozo?.Invoke(this);
         }
     }
 }

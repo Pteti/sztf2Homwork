@@ -6,15 +6,24 @@ using System.Threading.Tasks;
 
 namespace OnlineShop
 {
-    class Termek : IMegrendelheto
+    public delegate void TermekRendelesNaplozo(Termek termek);
+    public class Termek : IMegrendelheto, IComparable
     {
         string megnevezes;
         double ar;
         int prioritas;
+        public TermekRendelesNaplozo Naplozo { get; set; }
         public string Megnevezes { get => megnevezes; set => megnevezes = value; }
         public double Ar { get => ar; set => ar = value; }
         public int Prioritas { get => prioritas; set => prioritas = value; }
 
+        public Termek(string megnevezes, double ar, int prioritas)
+        {
+            this.megnevezes = megnevezes;
+            this.ar = ar;
+            this.prioritas = prioritas;
+            MegrendelhetoTarolo.fabaIllesztes(this);
+        }
         public void arAlkudozas()
         {
             Random rnd = new Random();
@@ -30,10 +39,16 @@ namespace OnlineShop
             switch (tavolsag)
             {
                 case var expression when tavolsag < 10:
-                    return 10;
+                    return 3;
                 default:
-                    break;
+                    return 7;
             }
+        }
+
+        public void kosarba(string uzenet)
+        {
+            Console.WriteLine(uzenet);
+            Naplozo?.Invoke(this);
         }
     }
 }

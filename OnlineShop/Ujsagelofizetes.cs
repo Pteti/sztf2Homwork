@@ -8,5 +8,16 @@ namespace OnlineShop
 {
     class Ujsagelofizetes : Szolgaltatas
     {
+        int honapszam;
+
+        public Ujsagelofizetes(string megnevezes, double ar, int prioritas, int honapszam) : base(megnevezes, ar, prioritas)
+        {
+            this.honapszam = honapszam;
+        }
+
+        public void kosarba()
+        {
+            base.kosarba($"A kosárba került egy {honapszam} -os {Megnevezes}!");
+        }
     }
 }

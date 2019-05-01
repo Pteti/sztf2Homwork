@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OnlineShop
 {
-    interface IMegrendelheto
+    public interface IMegrendelheto
     {
         String Megnevezes
         {
