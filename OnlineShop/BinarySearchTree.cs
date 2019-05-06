@@ -1,50 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace OnlineShop
 {
     class Node
     {
-        public string termekNev;
+        public IMegrendelheto megrendelheto;
         public Node bal;
         public Node jobb;
     }
 
     class BinarySearchTree
-    { 
-        public Node beilleszt(Node root,string nev)
+    {
+        public static List<IMegrendelheto> megrendelhetoLista = new List<IMegrendelheto>();
+
+        public Node beilleszt(Node root,IMegrendelheto termek)
         {
             if (root == null)
             {
                 root = new Node();
-                root.termekNev = nev;
+                root.megrendelheto = termek;
             }
-            else if (string.Compare(nev,root.termekNev) == -1)
+            else if (string.Compare(termek.Megnevezes,root.megrendelheto.Megnevezes) == -1)
             {
-                root.bal = beilleszt(root.bal, nev);
+                root.bal = beilleszt(root.bal, termek);
+                megrendelhetoLista.Add(termek);
             }
             else
             {
-                root.jobb = beilleszt(root.jobb, nev);
+                root.jobb = beilleszt(root.jobb, termek);
+                megrendelhetoLista.Add(termek);
             }
 
             return root;
         }
 
-        public string Keres(Node root,string nev)
+        public string Keres(Node root, string termek)
         {
             if (root == null)
             {
                 return "Nincs ilyen termek/szolgaltatas";
             }
 
-            if (root.termekNev == nev)
+            if (root.megrendelheto.Megnevezes == termek)
             {
                 return "Létezik!";
             }
 
-            Keres(root.bal, nev);
-            Keres(root.jobb, nev);
+            Keres(root.bal, termek);
+            Keres(root.jobb, termek);
 
             return "Nincs ilyen termek/szolgaltatas";
         }
@@ -56,7 +61,7 @@ namespace OnlineShop
                 return;
             }
 
-            Console.WriteLine(root.termekNev);
+            Console.WriteLine(root.megrendelheto.Megnevezes + " " + root.megrendelheto.Ar + " Ft");
 
             mindKiir(root.bal);
             mindKiir(root.jobb);

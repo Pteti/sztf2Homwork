@@ -11,14 +11,14 @@ namespace OnlineShop
 
         string ruhameret;
 
-        public Mez(string megnevezes, double ar, int prioritas,string ruhameret) : base(megnevezes,ar,prioritas)
+        public Mez(string megnevezes, double ar,string ruhameret) : base(megnevezes,ar)
         {
             this.ruhameret = ruhameret;
         }
 
-        public void kosarba()
+        public void kosarba(int prio)
         {
-            base.kosarba($"A kosárba került egy {ruhameret} -es {Megnevezes}!");
+            base.kosarba(prio, $"A kosárba került egy {ruhameret} -es {Megnevezes}!");
         }
     }
 }

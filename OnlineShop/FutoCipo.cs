@@ -9,14 +9,14 @@ namespace OnlineShop
     class FutoCipo : Termek
     {
         int cipomeret;
-        public FutoCipo(string megnevezes, double ar, int prioritas, int cipomeret) : base(megnevezes, ar, prioritas)
+        public FutoCipo(string megnevezes, double ar, int cipomeret) : base(megnevezes, ar)
         {
             this.cipomeret = cipomeret;
         }
 
-        public void kosarba()
+        public void kosarba(int prio)
         {
-            base.kosarba($"A kosárba került egy {cipomeret} -es {Megnevezes}!");
+            base.kosarba(prio, $"A kosárba került egy {cipomeret} -es {Megnevezes}!");
         }
     }
 }

@@ -10,14 +10,14 @@ namespace OnlineShop
     {
         int honapszam;
 
-        public Ujsagelofizetes(string megnevezes, double ar, int prioritas, int honapszam) : base(megnevezes, ar, prioritas)
+        public Ujsagelofizetes(string megnevezes, double ar, int honapszam) : base(megnevezes, ar)
         {
             this.honapszam = honapszam;
         }
 
-        public void kosarba()
+        public void kosarba(int prio)
         {
-            base.kosarba($"A kosárba került egy {honapszam} -os {Megnevezes}!");
+            base.kosarba(prio, $"A kosárba került egy {honapszam} -os {Megnevezes}!");
         }
     }
 }

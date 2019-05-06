@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace OnlineShop
 {
-    static class MegrendelhetoTarolo
+    public static class MegrendelhetoTarolo
     {
         static BinarySearchTree keresoFa = new BinarySearchTree();
         static Node root = null;
 
         public static void fabaIllesztes(IMegrendelheto megrendelheto)
         {
-            root = keresoFa.beilleszt(root, megrendelheto.Megnevezes);
+            root = keresoFa.beilleszt(root, megrendelheto);
         }
 
-        public static void fabaKereses(IMegrendelheto megrendelheto)
+        public static void fabaKereses(string megrendelheto)
         {
-            Console.WriteLine(keresoFa.Keres(root, megrendelheto.Megnevezes));
+            Console.WriteLine(keresoFa.Keres(root, megrendelheto));
         }
 
         public static void osszesTermekKiirasa()

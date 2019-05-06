@@ -17,11 +17,10 @@ namespace OnlineShop
         public double Ar { get => ar; set => ar = value; }
         public int Prioritas { get => prioritas; set => prioritas = value; }
 
-        public Szolgaltatas(string megnevezes, double ar, int prioritas)
+        public Szolgaltatas(string megnevezes, double ar)
         {
             this.megnevezes = megnevezes;
             this.ar = ar;
-            this.prioritas = prioritas;
             MegrendelhetoTarolo.fabaIllesztes(this);
         }
         public int szallitasiIdoKiszamitasa(int tavolsag)
@@ -45,10 +44,25 @@ namespace OnlineShop
             }
         }
 
-        public void kosarba(string uzenet)
+        public void kosarba(int prioritas, string szoveg)
         {
-            Console.WriteLine(uzenet);
-            Naplozo?.Invoke(this);
+            this.prioritas = prioritas;
+
+            if (vanElegPenz())
+            {
+                Console.WriteLine(szoveg);
+                Felhasznalo.FennmaradoOsszegKeret -= (int)this.ar;
+                Naplozo?.Invoke(this);
+            }
+            else
+            {
+                BevasarloKosar.prioritasRendezes(this);
+            }
+        }
+
+        public bool vanElegPenz()
+        {
+            return this.ar < Felhasznalo.FennmaradoOsszegKeret;
         }
     }
 }

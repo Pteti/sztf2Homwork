@@ -17,20 +17,22 @@ namespace OnlineShop
         public double Ar { get => ar; set => ar = value; }
         public int Prioritas { get => prioritas; set => prioritas = value; }
 
-        public Termek(string megnevezes, double ar, int prioritas)
+        public Termek(string megnevezes, double ar)
         {
             this.megnevezes = megnevezes;
             this.ar = ar;
-            this.prioritas = prioritas;
             MegrendelhetoTarolo.fabaIllesztes(this);
         }
         public void arAlkudozas()
         {
             Random rnd = new Random();
-            if (rnd.Next(0, 100) % prioritas == 0)
+            if (rnd.Next(0, 100) % 3 == 0)
             {
                 Console.WriteLine("Najó, kapsz 10% -ot!");
                 ar = ar * 0.9;
+            } else
+            {
+                Console.WriteLine("Sajnos teljes árat kell fizetned érte!");
             }
         }
 
@@ -45,10 +47,24 @@ namespace OnlineShop
             }
         }
 
-        public void kosarba(string uzenet)
+        public void kosarba(int prioritas,string szoveg)
         {
-            Console.WriteLine(uzenet);
-            Naplozo?.Invoke(this);
+            this.prioritas = prioritas;
+
+            if (vanElegPenz())
+            {
+                Console.WriteLine(szoveg);
+                Felhasznalo.FennmaradoOsszegKeret -= (int)this.ar;
+                Naplozo?.Invoke(this);
+            } else
+            {
+                BevasarloKosar.prioritasRendezes(this);
+            }
+        }
+
+        public bool vanElegPenz()
+        {
+            return this.ar < Felhasznalo.FennmaradoOsszegKeret;
         }
     }
 }
