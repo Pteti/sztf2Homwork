@@ -11,6 +11,9 @@ namespace OnlineShop
         static LinkedList<IMegrendelheto> bevasarloKosar = new LinkedList<IMegrendelheto>();
         static int mezekSzama = 0;
         static int cipokSzama = 0;
+        static int legmagasabbPrioritas;
+        static bool[] legjobbMegrendelheto;
+            
 
         public static void kosarbaTesz(IMegrendelheto rendeles)
         {
@@ -43,56 +46,6 @@ namespace OnlineShop
             }
         }
 
-        public static void prioritasRendezes(IMegrendelheto megrendelheto)
-        {
-            Console.WriteLine("Ez a termek nem fer bele a keretedbe. Mindenkeppen szeretned megrendelni?(Y/N) ");
-            string confirm = Console.ReadLine().ToLower();
-            if (confirm == "y")
-            {
-                List<IMegrendelheto> lista = new List<IMegrendelheto>(bevasarloKosar);
-                BevasarloKosar.kosarUrites();
-                BevasarloKosar.kosarbaTesz(megrendelheto);
-                Felhasznalo.FennmaradoOsszegKeret = Felhasznalo.Osszegkeret - (int)megrendelheto.Ar;
-                lista = prioRendezes(lista);
-                int i = 0;
-                while (Felhasznalo.FennmaradoOsszegKeret > 0 && i < lista.Count())
-                {
-                    if (lista[i].Ar < Felhasznalo.FennmaradoOsszegKeret)
-                    {
-                        BevasarloKosar.kosarbaTesz(lista[i]);
-                        Felhasznalo.FennmaradoOsszegKeret -= (int)lista[i].Ar;
-                    }
-                    i++;
-                }
-
-            }
-            else
-            {
-                Console.WriteLine("Rendben! A terméket nem adtuk hozzá a kosárhoz!");
-            }
-
-            Console.WriteLine("A kosaradban így a következő termékek vannak: ");
-            BevasarloKosar.rendelesLekerdezes();
-        }
-
-        public static List<IMegrendelheto> prioRendezes(List<IMegrendelheto> lista)
-        {
-            List<IMegrendelheto> rendezettLista = lista;
-            for (int i = 0; i < rendezettLista.Count; i++)
-            {
-                for (int j = 0; j < rendezettLista.Count; j++)
-                {
-                    if (rendezettLista[j].Prioritas < rendezettLista[i].Prioritas)
-                    {
-                        IMegrendelheto temp = rendezettLista[i];
-                        rendezettLista[i] = rendezettLista[j];
-                        rendezettLista[j] = temp;
-                    }
-                }
-            }
-            return rendezettLista;
-        }
-
         public static void Naploz(IMegrendelheto termek)
         {
             Console.WriteLine($"A fennmaradő kereted: {Felhasznalo.FennmaradoOsszegKeret}");
@@ -101,6 +54,63 @@ namespace OnlineShop
               {
                 termekRendelt(termek);
               }
+        }
+
+        public static void Backpack(List<IMegrendelheto> lista, bool[] valasztott, int melyseg, int ar, 
+            int prioritas, int fennmaradoPrioritas)
+        {
+            if (ar > Felhasznalo.FennmaradoOsszegKeret) { return; }
+            if (prioritas + fennmaradoPrioritas < legmagasabbPrioritas) { return; }
+            if (melyseg == valasztott.Length)
+            {
+                legmagasabbPrioritas = prioritas;
+                Array.Copy(valasztott, legjobbMegrendelheto, valasztott.Length);
+                return;
+            }
+
+            fennmaradoPrioritas -= lista[melyseg].Prioritas;
+            valasztott[melyseg] = false;
+
+            Backpack(lista, valasztott, melyseg + 1, ar, prioritas, fennmaradoPrioritas);
+
+            valasztott[melyseg] = true;
+            ar += (int)lista[melyseg].Ar;
+            prioritas += lista[melyseg].Prioritas;
+
+            Backpack(lista, valasztott, melyseg + 1, ar, prioritas, fennmaradoPrioritas);
+        }
+
+        public static void prioritasRendezes(IMegrendelheto megrendelheto)
+        {
+            Console.WriteLine("Ez a termek nem fer bele a keretedbe. Mindenkeppen szeretned megrendelni?(Y/N) ");
+            string confirm = Console.ReadLine().ToLower();
+            if (confirm == "y")
+            {
+                List<IMegrendelheto> lista = new List<IMegrendelheto>(bevasarloKosar);
+                int meret = bevasarloKosar.Count;
+                var valasztott = new bool[meret];
+                legjobbMegrendelheto = new bool[meret];
+                legmagasabbPrioritas = 0;
+                BevasarloKosar.kosarUrites();
+                BevasarloKosar.kosarbaTesz(megrendelheto);
+                Felhasznalo.FennmaradoOsszegKeret = Felhasznalo.Osszegkeret - (int)megrendelheto.Ar;
+                var osszPrioritas = lista.Sum(i => i.Prioritas);
+
+                Backpack(lista, valasztott, 0, 0, 0, osszPrioritas);
+
+                // feltoltjuk ujra az eredmennyel
+                for (var i = 0; i < meret; i++)
+                {
+                    if (legjobbMegrendelheto[i]) { kosarbaTesz(lista[i]); Felhasznalo.FennmaradoOsszegKeret -= (int)lista[i].Ar; }
+                }
+            }
+            else
+            {
+                Console.WriteLine("Rendben! A terméket nem adtuk hozzá a kosárhoz!");
+            }
+
+            Console.WriteLine("A kosaradban így a következő termékek vannak: ");
+            BevasarloKosar.rendelesLekerdezes();
         }
     }
 }
